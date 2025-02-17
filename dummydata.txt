@@ -1,83 +1,150 @@
 -- Insert Customers
 INSERT INTO Customer (C_FN, C_LN, C_Email, C_Phone, C_CreatedAt) VALUES
-('Juan', 'Dela Cruz', 'juan.delacruz@example.com', '09171234567', '2020-01-15 10:00:00'),
-('Maria', 'Santos', 'maria.santos@example.com', '09181234567', '2020-02-20 11:00:00'),
--- Add more customer data here...
+('Aldrin', 'Bautista', 'aldrin.bautista@example.com', '09171234567', '2020-01-15 10:00:00'),
+('Bianca', 'Castro', 'bianca.castro@example.com', '09181234567', '2020-02-20 11:00:00'),
+('Carlo', 'Domingo', 'carlo.domingo@example.com', '09191234567', '2020-03-25 12:00:00'),
+('Danica', 'Espinosa', 'danica.espinosa@example.com', '09201234567', '2020-04-30 13:00:00'),
+('Enrico', 'Fernandez', 'enrico.fernandez@example.com', '09211234567', '2020-05-05 14:00:00'),
+('Fatima', 'Garcia', 'fatima.garcia@example.com', '09221234567', '2020-06-10 15:00:00'),
+('Gabriel', 'Hernandez', 'gabriel.hernandez@example.com', '09231234567', '2020-07-15 16:00:00'),
+('Hannah', 'Iglesias', 'hannah.iglesias@example.com', '09241234567', '2020-08-20 17:00:00'),
+('Ivan', 'Jimenez', 'ivan.jimenez@example.com', '09251234567', '2020-09-25 18:00:00'),
+('Jasmine', 'Lopez', 'jasmine.lopez@example.com', '09261234567', '2020-10-30 19:00:00'),
+('Kyle', 'Mendoza', 'kyle.mendoza@example.com', '09271234567', '2020-11-05 20:00:00'),
+('Lorena', 'Navarro', 'lorena.navarro@example.com', '09281234567', '2020-12-10 21:00:00'),
+('Marco', 'Ocampo', 'marco.ocampo@example.com', '09291234567', '2021-01-15 22:00:00'),
+('Nina', 'Pascual', 'nina.pascual@example.com', '09301234567', '2021-02-20 23:00:00'),
+('Oscar', 'Querubin', 'oscar.querubin@example.com', '09311234567', '2021-03-25 00:00:00'),
+('Patricia', 'Reyes', 'patricia.reyes@example.com', '09321234567', '2021-04-30 01:00:00'),
+('Rafael', 'Santos', 'rafael.santos@example.com', '09331234567', '2021-05-05 02:00:00'),
+('Sophia', 'Torres', 'sophia.torres@example.com', '09341234567', '2021-06-10 03:00:00'),
+('Tony', 'Urbano', 'tony.urbano@example.com', '09351234567', '2021-07-15 04:00:00'),
+('Vanessa', 'Valdez', 'vanessa.valdez@example.com', '09361234567', '2021-08-20 05:00:00');
 
 -- Insert Employees
 INSERT INTO Employee (E_FN, E_LN, Position, E_Email, E_Phone, Hire_Date, Salary) VALUES
 ('Pedro', 'Reyes', 'Manager', 'pedro.reyes@example.com', '09191234567', '2020-01-10 09:00:00', 60000),
 ('Ana', 'Garcia', 'Cashier', 'ana.garcia@example.com', '09201234567', '2020-03-12 10:00:00', 30000),
--- Add more employee data here...
+('Jose', 'Rizal', 'Salesperson', 'jose.rizal@example.com', '09211234567', '2020-05-05 11:00:00', 40000),
+('Andres', 'Bonifacio', 'Stock Clerk', 'andres.bonifacio@example.com', '09221234567', '2020-07-15 12:00:00', 35000),
+('Emilio', 'Aguinaldo', 'Supervisor', 'emilio.aguinaldo@example.com', '09231234567', '2020-09-25 13:00:00', 50000);
 
--- Insert Orders
-INSERT INTO Orders (Order_Date, Order_Status, Total_Cost, Customer_ID, Employee_ID) VALUES
-('2020-01-20 10:30:00', 'Completed', 1500.50, 1, 1),
-('2020-02-25 12:45:00', 'Pending', 2500.75, 2, 2),
--- Add more order data here...
+-- Insert Orders, OrderDetails, Payments, Transactions, and Shipments
+DO $$ 
+DECLARE
+    start_date DATE := '2020-01-01';
+    end_date DATE := '2025-01-31';
+    current_date DATE;
+    order_id INT := 1;
+    detail_id INT := 1;
+    payment_id INT := 1;
+    transaction_id INT := 1;
+    shipment_id INT := 1;
+    customer_count INT := (SELECT COUNT(*) FROM Customer);
+    employee_count INT := (SELECT COUNT(*) FROM Employee);
+    product_count INT := (SELECT COUNT(*) FROM Products);
+    carrier_count INT := (SELECT COUNT(*) FROM Carrier);
+BEGIN
+    current_date := start_date;
+    WHILE current_date <= end_date LOOP
+        FOR i IN 1..50 LOOP
+            INSERT INTO Orders (Order_Date, Order_Status, Total_Cost, Customer_ID, Employee_ID) VALUES
+            (current_date + INTERVAL '1 day' * (RANDOM() * 30), 
+             CASE WHEN RANDOM() < 0.7 THEN 'Completed' ELSE 'Pending' END, 
+             ROUND(RANDOM() * 10000 + 100, 2), 
+             CEIL(RANDOM() * customer_count), 
+             CEIL(RANDOM() * employee_count)
+            ) RETURNING Order_ID INTO order_id;
 
--- Insert OrderDetails
-INSERT INTO OrderDetails (Order_ID, Product_ID, Quantity, Unit_Price, SubTotal) VALUES
-(1, 1, 5, 300.10, 1500.50),
-(2, 2, 10, 250.07, 2500.75),
--- Add more order details data here...
+            FOR j IN 1..2 LOOP
+                INSERT INTO OrderDetails (Order_ID, Product_ID, Quantity, Unit_Price, SubTotal) VALUES
+                (order_id, 
+                 CEIL(RANDOM() * product_count), 
+                 CEIL(RANDOM() * 10 + 1), 
+                 ROUND(RANDOM() * 1000 + 10, 2), 
+                 ROUND(RANDOM() * 1000 + 10, 2)
+                ) RETURNING OrderDetails_ID INTO detail_id;
+            END LOOP;
 
--- Insert Payments
-INSERT INTO Payment (Order_ID, P_Method, P_Status, P_Date) VALUES
-(1, 'Credit Card', 'Paid', '2020-01-21 10:00:00'),
-(2, 'Cash', 'Pending', '2020-02-26 11:00:00'),
--- Add more payment data here...
+            INSERT INTO Payment (Order_ID, P_Method, P_Status, P_Date) VALUES
+            (order_id, 
+             CASE WHEN RANDOM() < 0.4 THEN 'Credit Card' WHEN RANDOM() < 0.7 THEN 'Cash' ELSE 'Bank Transfer' END, 
+             CASE WHEN RANDOM() < 0.7 THEN 'Paid' ELSE 'Pending' END, 
+             current_date + INTERVAL '1 day' * (RANDOM() * 30)
+            ) RETURNING Payment_ID INTO payment_id;
 
--- Insert Transactions
-INSERT INTO Transaction (Order_ID, Payment_ID, Transaction_Type, Transaction_Date) VALUES
-(1, 1, 'Sale', '2020-01-21 11:00:00'),
-(2, 2, 'Sale', '2020-02-26 12:00:00'),
--- Add more transaction data here...
+            INSERT INTO Transaction (Order_ID, Payment_ID, Transaction_Type, Transaction_Date) VALUES
+            (order_id, 
+             payment_id, 
+             CASE WHEN RANDOM() < 0.8 THEN 'Sale' WHEN RANDOM() < 0.9 THEN 'Refund' ELSE 'Exchange' END, 
+             current_date + INTERVAL '1 day' * (RANDOM() * 30)
+            ) RETURNING Transaction_ID INTO transaction_id;
 
--- Insert Shipments
-INSERT INTO Shipment (Order_ID, Carrier_ID, Tracking_Number, Delivery_Status, Es_DeliveryDate) VALUES
-(1, 1, 'ABCD-12345', 'Delivered', '2020-01-22 13:00:00'),
-(2, 2, 'EFGH-67890', 'In Transit', '2020-02-27 14:00:00'),
--- Add more shipment data here...
+            IF RANDOM() < 0.2 THEN
+                INSERT INTO Shipment (Order_ID, Carrier_ID, Tracking_Number, Delivery_Status, Es_DeliveryDate) VALUES
+                (order_id, 
+                 CEIL(RANDOM() * carrier_count), 
+                 SUBSTRING(MD5(RANDOM()::TEXT), 1, 10), 
+                 CASE WHEN RANDOM() < 0.5 THEN 'Delivered' WHEN RANDOM() < 0.8 THEN 'In Transit' ELSE 'Pending' END, 
+                 current_date + INTERVAL '1 day' * (RANDOM() * 30)
+                ) RETURNING Shipment_ID INTO shipment_id;
+            END IF;
+        END LOOP;
+        current_date := current_date + INTERVAL '1 month';
+    END LOOP;
+END $$;
 
 -- Insert Carriers
 INSERT INTO Carrier (Carrier_Name) VALUES
 ('LBC Express'),
 ('J&T Express'),
--- Add more carrier data here...
+('2GO Express'),
+('Ninja Van Philippines'),
+('Grab Express'),
+('Gogo Xpress'),
+('JRS Express'),
+('Entrego');
 
 -- Insert Categories
 INSERT INTO Category (Ctg_Name, Description) VALUES
-('Electronics', 'Devices and gadgets'),
-('Clothing', 'Apparel and accessories'),
--- Add more category data here...
+('Chocolates', 'Popular chocolates in the Philippines'),
+('Korean Snacks', 'Common Korean snacks available in the Philippines');
 
 -- Insert Suppliers
 INSERT INTO Supplier (Sp_Name, Contact_Person, S_Email, S_Phone, Street, Barangay) VALUES
 ('ABC Supplies', 'Jose Rizal', 'jose.rizal@example.com', '09221234567', '1234 Street', 'Barangay 1'),
-('XYZ Traders', 'Andres Bonifacio', 'andres.bonifacio@example.com', '09231234567', '5678 Avenue', 'Barangay 2'),
--- Add more supplier data here...
+('XYZ Traders', 'Andres Bonifacio', 'andres.bonifacio@example.com', '09231234567', '5678 Avenue', 'Barangay 2');
 
 -- Insert Products
 INSERT INTO Products (Category_ID, ADMIN_ID, Inventory_ID, Product_Name, Product_Description, Price, Stock_Quantity, P_CreatedAt) VALUES
-(1, 1, 1, 'Laptop', 'A high-performance laptop', 50000.00, 10, '2020-01-10 15:00:00'),
-(2, 2, 2, 'T-Shirt', 'A comfortable cotton t-shirt', 500.00, 50, '2020-02-15 16:00:00'),
--- Add more product data here...
+(1, 1, 1, 'Toblerone', 'A popular chocolate brand in the Philippines', 500.00, 100, '2020-01-10 15:00:00'),
+(1, 2, 2, 'Ferrero Rocher', 'A premium chocolate brand in the Philippines', 700.00, 50, '2020-02-15 16:00:00'),
+(2, 1, 3, 'Choco Pie', 'A popular Korean snack', 150.00, 200, '2020-03-20 17:00:00'),
+(2, 2, 4, 'Pepero', 'A common Korean snack', 100.00, 150, '2020-04-25 18:00:00'),
+(1, 1, 5, 'Cadbury Dairy Milk', 'A well-loved chocolate in the Philippines', 400.00, 120, '2020-05-30 19:00:00'),
+(1, 2, 6, 'Hershey\'s Kisses', 'A popular chocolate brand in the Philippines', 350.00, 80, '2020-06-15 20:00:00'),
+(2, 1, 7, 'Lotte Choco Pie', 'A popular Korean snack', 160.00, 180, '2020-07-20 21:00:00'),
+(2, 2, 8, 'Banana Kick', 'A common Korean snack', 90.00, 130, '2020-08-25 22:00:00'),
+(1, 1, 9, 'KitKat', 'A well-loved chocolate in the Philippines', 300.00, 140, '2020-09-30 23:00:00'),
+(1, 2, 10, 'Meiji Almond Chocolate', 'A popular chocolate brand in the Philippines', 450.00, 90, '2020-10-15 24:00:00'),
+(2, 1, 11, 'Orion Choco Pie', 'A popular Korean snack', 170.00, 170, '2020-11-20 25:00:00'),
+(2, 2, 12, 'Shrimp Chips', 'A common Korean snack', 80.00, 110, '2020-12-25 26:00:00');
 
 -- Insert Inventories
 INSERT INTO Inventory (Product_ID, Stock_Change, Update_At) VALUES
-(1, 10, '2020-01-10 15:00:00'),
+(1, 100, '2020-01-10 15:00:00'),
 (2, 50, '2020-02-15 16:00:00'),
--- Add more inventory data here...
+(3, 200, '2020-03-20 17:00:00'),
+(4, 150, '2020-04-25 18:00:00');
 
 -- Insert Admins
 INSERT INTO ADMIN (A_FN, A_LN, A_Username, A_Password) VALUES
 ('Admin', 'One', 'admin1', 'password1'),
-('Admin', 'Two', 'admin2', 'password2'),
--- Add more admin data here...
+('Admin', 'Two', 'admin2', 'password2');
 
 -- Insert Product Prices
 INSERT INTO Product_Price (Product_ID, Price, Effective_From, Effective_To) VALUES
-(1, 50000.00, '2020-01-10', '2025-01-10'),
-(2, 500.00, '2020-02-15', '2025-02-15');
--- Add more product price data here...
+(1, 500.00, '2020-01-10', '2025-01-10'),
+(2, 700.00, '2020-02-15', '2025-02-15'),
+(3, 150.00, '2020-03-20', '2025-03-20'),
+(4, 100.00, '2020-04-25', '2025-04-25');
