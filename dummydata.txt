@@ -1,0 +1,83 @@
+-- Insert Customers
+INSERT INTO Customer (C_FN, C_LN, C_Email, C_Phone, C_CreatedAt) VALUES
+('Juan', 'Dela Cruz', 'juan.delacruz@example.com', '09171234567', '2020-01-15 10:00:00'),
+('Maria', 'Santos', 'maria.santos@example.com', '09181234567', '2020-02-20 11:00:00'),
+-- Add more customer data here...
+
+-- Insert Employees
+INSERT INTO Employee (E_FN, E_LN, Position, E_Email, E_Phone, Hire_Date, Salary) VALUES
+('Pedro', 'Reyes', 'Manager', 'pedro.reyes@example.com', '09191234567', '2020-01-10 09:00:00', 60000),
+('Ana', 'Garcia', 'Cashier', 'ana.garcia@example.com', '09201234567', '2020-03-12 10:00:00', 30000),
+-- Add more employee data here...
+
+-- Insert Orders
+INSERT INTO Orders (Order_Date, Order_Status, Total_Cost, Customer_ID, Employee_ID) VALUES
+('2020-01-20 10:30:00', 'Completed', 1500.50, 1, 1),
+('2020-02-25 12:45:00', 'Pending', 2500.75, 2, 2),
+-- Add more order data here...
+
+-- Insert OrderDetails
+INSERT INTO OrderDetails (Order_ID, Product_ID, Quantity, Unit_Price, SubTotal) VALUES
+(1, 1, 5, 300.10, 1500.50),
+(2, 2, 10, 250.07, 2500.75),
+-- Add more order details data here...
+
+-- Insert Payments
+INSERT INTO Payment (Order_ID, P_Method, P_Status, P_Date) VALUES
+(1, 'Credit Card', 'Paid', '2020-01-21 10:00:00'),
+(2, 'Cash', 'Pending', '2020-02-26 11:00:00'),
+-- Add more payment data here...
+
+-- Insert Transactions
+INSERT INTO Transaction (Order_ID, Payment_ID, Transaction_Type, Transaction_Date) VALUES
+(1, 1, 'Sale', '2020-01-21 11:00:00'),
+(2, 2, 'Sale', '2020-02-26 12:00:00'),
+-- Add more transaction data here...
+
+-- Insert Shipments
+INSERT INTO Shipment (Order_ID, Carrier_ID, Tracking_Number, Delivery_Status, Es_DeliveryDate) VALUES
+(1, 1, 'ABCD-12345', 'Delivered', '2020-01-22 13:00:00'),
+(2, 2, 'EFGH-67890', 'In Transit', '2020-02-27 14:00:00'),
+-- Add more shipment data here...
+
+-- Insert Carriers
+INSERT INTO Carrier (Carrier_Name) VALUES
+('LBC Express'),
+('J&T Express'),
+-- Add more carrier data here...
+
+-- Insert Categories
+INSERT INTO Category (Ctg_Name, Description) VALUES
+('Electronics', 'Devices and gadgets'),
+('Clothing', 'Apparel and accessories'),
+-- Add more category data here...
+
+-- Insert Suppliers
+INSERT INTO Supplier (Sp_Name, Contact_Person, S_Email, S_Phone, Street, Barangay) VALUES
+('ABC Supplies', 'Jose Rizal', 'jose.rizal@example.com', '09221234567', '1234 Street', 'Barangay 1'),
+('XYZ Traders', 'Andres Bonifacio', 'andres.bonifacio@example.com', '09231234567', '5678 Avenue', 'Barangay 2'),
+-- Add more supplier data here...
+
+-- Insert Products
+INSERT INTO Products (Category_ID, ADMIN_ID, Inventory_ID, Product_Name, Product_Description, Price, Stock_Quantity, P_CreatedAt) VALUES
+(1, 1, 1, 'Laptop', 'A high-performance laptop', 50000.00, 10, '2020-01-10 15:00:00'),
+(2, 2, 2, 'T-Shirt', 'A comfortable cotton t-shirt', 500.00, 50, '2020-02-15 16:00:00'),
+-- Add more product data here...
+
+-- Insert Inventories
+INSERT INTO Inventory (Product_ID, Stock_Change, Update_At) VALUES
+(1, 10, '2020-01-10 15:00:00'),
+(2, 50, '2020-02-15 16:00:00'),
+-- Add more inventory data here...
+
+-- Insert Admins
+INSERT INTO ADMIN (A_FN, A_LN, A_Username, A_Password) VALUES
+('Admin', 'One', 'admin1', 'password1'),
+('Admin', 'Two', 'admin2', 'password2'),
+-- Add more admin data here...
+
+-- Insert Product Prices
+INSERT INTO Product_Price (Product_ID, Price, Effective_From, Effective_To) VALUES
+(1, 50000.00, '2020-01-10', '2025-01-10'),
+(2, 500.00, '2020-02-15', '2025-02-15');
+-- Add more product price data here...
